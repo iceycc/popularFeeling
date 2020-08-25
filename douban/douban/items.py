@@ -13,3 +13,4 @@ class DoubanItem(scrapy.Item):
     link = scrapy.Field()
     image = scrapy.Field()
     commons = scrapy.Field()
+    locakImgePath = scrapy.Field()

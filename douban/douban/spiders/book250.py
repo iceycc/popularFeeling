@@ -19,14 +19,14 @@ class Book250Spider(scrapy.Spider):
         html = etree.HTML(response.text)
         book_tr_list = html.xpath('//*[@id="content"]//div[@class="article"]//tr[@class="item"]')
         for tr in book_tr_list:
-            image = tr.xpath("./td[1]//img/@src")
-            title = tr.xpath(".//div[@class='pl2']/a/@title")
-            link = tr.xpath(".//div[@class='pl2']/a/@href")
+            image = tr.xpath("./td[1]//img/@src")[0]
+            title = tr.xpath(".//div[@class='pl2']/a/@title")[0]
+            link = tr.xpath(".//div[@class='pl2']/a/@href")[0]
             item = DoubanItem()
             item['image'] = image
             item['title'] = title
             item['link'] = link
-            yield scrapy.Request(url=link[0],meta={'item': item},callback=self.parseToDetail)
+            yield scrapy.Request(url=link,meta={'item': item},callback=self.parseToDetail)
 
         # tr = book_tr_list[3]
         # image = tr.xpath("./td[1]//img/@src")
@@ -41,8 +41,8 @@ class Book250Spider(scrapy.Spider):
     def parseToDetail(self,response):
         item = response.meta['item']
         html = etree.HTML(response.text)
-        href = html.xpath("//div[@class='mod-hd']//span[@class='pl']/a/@href")
-        yield scrapy.Request(url=href[0],meta={'item':item},callback=self.parseGetCommons)
+        href = html.xpath("//div[@class='mod-hd']//span[@class='pl']/a/@href")[0]
+        yield scrapy.Request(url=href,meta={'item':item},callback=self.parseGetCommons)
 
 
     def parseGetCommons(self,response):
